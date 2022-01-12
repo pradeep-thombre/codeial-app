@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
-import { Comment } from './comments';
+
+import  {Comment}  from '../components/comments';
 import styles from '../styles/home.module.css';
 
-const Home = ({ posts }) => {
+
+export const Home = ({ posts }) => {
   return (
     <div className={styles.postsList}>
       {posts.map((post) => (
         <div className={styles.postWrapper} key={`post-${post._id}`}>
+          {console.log(post)}
           <div className={styles.postHeader}>
             <div className={styles.postAvatar}>
               <img
@@ -53,4 +56,4 @@ Home.propTypes = {
   posts: PropTypes.array.isRequired,
 };
 
-export default Home;
+// export default Home;

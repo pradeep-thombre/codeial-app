@@ -1,30 +1,19 @@
-var num1=10;
+var data = {" name": " test ", "age": 25, 'detail':{'distance': '25a '}};
+// data=JSON.stringify(data);
 
-console.log("num1 outside",num1);
+function sol(obj){
+    for (let x in obj) {
 
-function sum(){
-    
-    var num2=9;
-    console.log("num1 outside",num1);
+        if(typeof myObject === 'object'){
+            obj[x]=sol(obj[x]);
+        }
+        else if(obj[x][0]===" "){
+            obj[x]=obj[x].subString(1);
+        }
+        
+    }
 }
 
-abc={
-    _par1:"abc",
-    par2:"xyz"
-}
+sol(data)
 
-a={...abc,
-    par3:"cux"
-}
-
-
-abc[par1]
-abc._par1
-
-sum();
-
-if(true){
-    var num3=20;
-    const num4=34;
-    let num5=80;
-}
+console.log(data);
