@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import { getPosts } from '../api';
 import  {Home}  from '../pages/Home';
@@ -8,6 +8,26 @@ import {Navbar}  from './Navbar';
 import {Login} from '../pages/Login';
 import {Signup} from '../pages/Signup';
 import { useAuth } from '../hooks';
+import {Settings} from '../pages/Settings';
+
+import {  UserProfile } from '../pages/UserProfile';
+
+function PrivateRoute({ children, ...rest }) {
+  const auth = useAuth();
+
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        return auth.user?children:Navigate("/login");
+      }}
+    />
+  );
+}
+
+const Page404 = () => {
+  return <h1>404</h1>;
+};
 
 function App() {
   const [posts,setPosts]=useState([]);
@@ -36,6 +56,9 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Signup />} />
           <Route exact path="/" element={<Home posts={posts} />} />
+          <Route exact path="/settings" element={<Settings/>}></Route>
+          <Route exact path="/user/:userId" element={<UserProfile/>}></Route>
+
         </Routes>
       </Router>
     </div>

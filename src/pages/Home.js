@@ -2,14 +2,39 @@ import PropTypes from 'prop-types';
 
 import  {Comment}  from '../components/comments';
 import styles from '../styles/home.module.css';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
+import {  Loader } from '../components/Loader';
+import { getPosts } from '../api';
 
-export const Home = ({ posts }) => {
+export const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await getPosts();
+
+      if (response.success) {
+        setPosts(response.data.posts);
+        
+      }
+
+      setLoading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+  
   return (
     <div className={styles.postsList}>
       {posts.map((post) => (
         <div className={styles.postWrapper} key={`post-${post._id}`}>
-          {console.log(post)}
           <div className={styles.postHeader}>
             <div className={styles.postAvatar}>
               <img
@@ -17,7 +42,18 @@ export const Home = ({ posts }) => {
                 alt="user-pic"
               />
               <div>
-                <span className={styles.postAuthor}>{post.user.name}</span>
+              <Link
+                  to={{
+                    pathname: `/user/${post.user._id}`,
+                    state: 
+                    {
+                      user: `${post.user}`,
+                    },
+                  }}
+                  className={styles.postAuthor}
+                >
+                  {post.user.name}
+                </Link>
                 <span className={styles.postTime}>a minute ago</span>
               </div>
             </div>

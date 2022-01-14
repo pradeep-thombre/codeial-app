@@ -12,7 +12,7 @@ export const Navbar = () => {
             src="https://ninjasfiles.s3.amazonaws.com/0000000000003454.png"
           />
         </a>
-      </div>}
+      </div>
       
       <div className={styles.rightNav}>
       {auth.user && <div className={styles.user}>

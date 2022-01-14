@@ -4,7 +4,7 @@ import { useToasts } from 'react-toast-notifications';
 import styles from '../styles/settings.module.css';
 import { useAuth } from '../hooks';
 
-const Settings = () => {
+export const Settings = () => {
   const auth = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState(auth.user?.name ? auth.user.name : '');
@@ -70,7 +70,7 @@ const Settings = () => {
     <div className={styles.settings}>
       <div className={styles.imgContainer}>
         <img
-          src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
+          src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg"
           alt=""
         />
       </div>
@@ -145,4 +145,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+// export default Settings;
