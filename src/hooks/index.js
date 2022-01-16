@@ -1,8 +1,15 @@
 import { useContext, useState, useEffect } from 'react';
 import jwt from 'jwt-decode';
 
-import { AuthContext } from '../providers/AuthProvider';
-import { addFriend, editProfile, fetchUserFriends, login as userLogin, register } from '../api';
+import { AuthContext,PostsContext } from '../providers';
+import {
+  editProfile,
+  fetchUserFriends,
+  login as userLogin,
+  register,
+  getPosts
+} from '../api';
+
 import {
   setItemInLocalStorage,
   LOCALSTORAGE_TOKEN_KEY,
@@ -19,22 +26,28 @@ export const useProvideAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUser= async () => {
+    const getUser = async () => {
       const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
-      let friends = [];
+
       if (userToken) {
         const user = jwt(userToken);
-        const response= await fetchUserFriends;
-        if(response.success){
-          friends=response.data.friends
+        const response = await fetchUserFriends();
+
+        let friends = [];
+
+        if (response.success) {
+          friends = response.data.friends;
         }
+
         setUser({
           ...user,
-          friends
+          friends,
         });
       }
+
       setLoading(false);
-    }
+    };
+
     getUser();
   }, []);
 
@@ -126,5 +139,52 @@ export const useProvideAuth = () => {
     signup,
     updateUser,
     updateUserFriends,
+  };
+};
+
+export const usePosts = () => {
+  return useContext(PostsContext);
+};
+
+export const useProvidePosts = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await getPosts();
+
+      if (response.success) {
+        setPosts(response.data.posts);
+      }
+
+      setLoading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  const addPostToState = (post) => {
+    const newPosts = [post, ...posts];
+    setPosts(newPosts);
+  };
+
+  const addComment = (comment, postId) => {
+    const newPosts = posts.map((post) => {
+      if (post._id === postId) {
+        return { ...post, comments: [...post.comments, comment] };
+      }
+      return post;
+    });
+
+    setPosts(newPosts);
+  };
+
+  
+  return {
+    data: posts,
+    loading,
+    addPostToState,
+    addComment
   };
 };

@@ -50,8 +50,9 @@ function App() {
   }
   return (
     <div className="App">
-      <Navbar/>
+      
       <Router>
+        <Navbar/>
         <Routes>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Signup />} />

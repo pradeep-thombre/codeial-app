@@ -1,11 +1,10 @@
-import { useLocation, useParams,useNavigate } from 'react-router-dom';
-
+import {  useParams,useNavigate } from 'react-router-dom';
 import styles from '../styles/settings.module.css';
-import { useAuth, useProvideAuth } from '../hooks';
 import { useEffect, useState } from 'react';
 import { addFriend, fetchUserProfile, removeFriend } from '../api';
 import { useToasts } from 'react-toast-notifications';
 import { Loader } from '../components/Loader';
+import { useAuth } from '../hooks';
 
 export const UserProfile = () => {
   const [user, setUser] = useState({});
@@ -41,7 +40,7 @@ export const UserProfile = () => {
   }
 
   const checkIfUserIsAFriend = () => {
-    const friends = auth.user.friendships;
+    const friends = auth.user.friends;
 
     const friendIds = friends.map((friend) => friend.to_user._id);
     const index = friendIds.indexOf(userId);
@@ -49,6 +48,7 @@ export const UserProfile = () => {
     if (index !== -1) {
       return true;
     }
+
     return false;
   };
 
@@ -73,23 +73,26 @@ export const UserProfile = () => {
     }
     setRequestInProgress(false);
   };
-  
-  const handleAddFriendClick= async()=>{
+
+  const handleAddFriendClick = async () => {
     setRequestInProgress(true);
-    const response =await addFriend(userId);
-    if(response.success){
-      const {friendships} = response.data;
-      auth.updateUser(true,friendships);
-      addToast('Friends added Successfully!',{
-        appearance:'success',
+
+    const response = await addFriend(userId);
+
+    if (response.success) {
+      const { friendship } = response.data;
+
+      auth.updateUserFriends(true, friendship);
+      addToast('Friend added successfully!', {
+        appearance: 'success',
       });
-    }else{
-      addToast(response.message,{
-        appearance:'error',
+    } else {
+      addToast(response.message, {
+        appearance: 'error',
       });
     }
     setRequestInProgress(false);
-  }
+  };
 
   return (
     <div className={styles.settings}>
